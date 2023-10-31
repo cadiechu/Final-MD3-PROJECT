@@ -46,6 +46,9 @@ public class CartManagerment {
                     System.out.println("Return!\n________________________");
                     flag = false;
                     break;
+                case 7:
+                    CartController.addNewItem();
+                    break;
                 default:
                     System.err.println("\nEnter number from selected category, please enter again!");
             }

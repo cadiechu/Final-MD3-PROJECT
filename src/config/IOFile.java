@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class IOFile {
-    public static final String USER_PATH = "D:\\JavaLession\\ProjectMD3\\src\\data\\users.txt";
-    public static final String CATALOG_PATH = "D:\\JavaLession\\ProjectMD3\\src\\data\\catalog.txt";
-    public static final String PRODUCT_PATH = "D:\\JavaLession\\ProjectMD3\\src\\data\\product.txt";
-    public static final String CART_PATH = "D:\\JavaLession\\ProjectMD3\\src\\data\\cart.txt";
-    public static final String ORDER_PATH = "D:\\JavaLession\\ProjectMD3\\src\\data\\order.txt";
-    public static final String ORDERDETAIL_PATH = "D:\\JavaLession\\ProjectMD3\\src\\data\\orderdetail.txt";
+    public static final String USER_PATH = "src/data/users.txt";
+    public static final String CATALOG_PATH = "src/data/catalog.txt";
+    public static final String PRODUCT_PATH = "src/data/product.txt";
+    public static final String CART_PATH = "src/data/cart.txt";
+    public static final String ORDER_PATH = "src/data/order.txt";
+    public static final String ORDERDETAIL_PATH = "src/data/orderdetail.txt";
 
     public static <T> List<T> readFromFile(String path) {
         List<T> list = new ArrayList<>();

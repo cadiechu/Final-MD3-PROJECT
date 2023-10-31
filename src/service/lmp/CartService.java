@@ -6,6 +6,7 @@ import controller.ProductController;
 import controller.UsersController;
 import service.UsersService;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class CartService implements IGeneric<CartItem,Integer>{
@@ -33,7 +34,7 @@ public class CartService implements IGeneric<CartItem,Integer>{
             flag=true;
         }else {
             for (CartItem c : userLogin.getCart()){
-                if (c.getProduct().getProductId()==cartItem.getProduct().getProductId()){
+                if (ProductController.findById(c.getProduct()).getProductId() == ProductController.findById(cartItem.getProduct()).getProductId()){
                     c.setQuantity(c.getQuantity()+cartItem.getQuantity());
                     flag=false;
                     break;
@@ -62,16 +63,22 @@ public class CartService implements IGeneric<CartItem,Integer>{
         return  null;
     }
 
+    public long getNewId(){
+        Long PL = cartItems.stream().map(CartItem::getId).max(Comparator.naturalOrder()).orElse(0L) + 1;
+        return PL;
+
+    }
+
     public void checkOut(String phoneNumber, String address) {
         Order order = new Order();
         order.setOrderId(OrderController.getNewId());
 
         List<OrderDetail> orderDetails = cartItems.stream().map(cartItem -> {
             OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setProductId(cartItem.getProduct().getProductId());
+            orderDetail.setProductId(ProductController.findById(cartItem.getProduct()).getProductId());
             orderDetail.setOrderId(order.getOrderId());
-            orderDetail.setProductName(cartItem.getProduct().getProductName());
-            orderDetail.setUnitPrice(cartItem.getProduct().getUnitPrice());
+            orderDetail.setProductName(ProductController.findById(cartItem.getProduct()).getProductName());
+            orderDetail.setUnitPrice(ProductController.findById(cartItem.getProduct()).getUnitPrice());
             orderDetail.setQuantity(cartItem.getQuantity());
             return orderDetail;
         }).toList();
@@ -80,16 +87,19 @@ public class CartService implements IGeneric<CartItem,Integer>{
         order.setName(userLogin.getFullName());
         order.setPhoneNumber(phoneNumber);
         order.setAddress(address);
-        double total = cartItems.stream().map(c->c.getProduct().getUnitPrice()*c.getQuantity()).reduce(0F, Float::sum);
+        double total = cartItems.stream().mapToDouble(c -> ProductController.findById(c.getProduct()).getUnitPrice() * c.getQuantity()).sum();
         order.setTotal(total);
 
         OrderController.orderService.save(order);
+
+
+
     }
 
     public void addProdToListCart(long id, int quantity) {
         CartItem cartItem = new CartItem();
         //Prod
-        cartItem.setProduct(ProductController.productService.findById(id));
+        cartItem.setProduct(ProductController.productService.findById(id).getProductId());
         //Quantity
         cartItem.setQuantity(quantity);
         //Save cart to user
